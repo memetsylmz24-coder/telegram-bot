@@ -2,9 +2,9 @@ import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 # Bot Token ve Admin Ayarları
-TOKEN = "8531178024:AAH..."  # Kendi token'ını buraya eksiksiz yaz
+TOKEN = "8531178024:AAH..."  # Kendi token'ın
 ADMINS = [7731769678]
-REF_BONUS = 10  # Davet başına verilecek bakiye
+REF_BONUS = 10  # Davet başına bakiye
 
 bot = telebot.TeleBot(TOKEN)
 
@@ -13,7 +13,6 @@ balances = {}
 all_users = set()
 referral_counts = {}
 invited_by = {}
-waiting_support = set()
 
 # /start Komutu
 @bot.message_handler(commands=['start'])
@@ -41,6 +40,7 @@ def start(message):
                 except Exception:
                     pass
 
+    # İstediğin kanal butonunu ve menüyü ekliyoruz
     markup = InlineKeyboardMarkup()
     markup.add(InlineKeyboardButton("Kanalımıza Katılın", url="https://t.me/yago_frewl"))
     markup.add(
@@ -63,61 +63,6 @@ def start(message):
     )
     bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode='Markdown')
 
-# Bakiye Ekleme Komutu
-@bot.message_handler(commands=['bakiyeekle'])
-def add_balance(message):
-    if message.from_user.id not in ADMINS:
-        return
-    try:
-        args = message.text.split()
-        target_id = int(args[1])
-        amount = int(args[2])
-        
-        balances[target_id] = balances.get(target_id, 0) + amount
-        bot.send_message(message.chat.id, f"✅ `{target_id}` ID'li kullanıcıya **+{amount} TL** eklendi!", parse_mode='Markdown')
-        
-        try:
-            bot.send_message(target_id, f"🎉 Hesabınıza **+{amount} TL** bakiye eklendi!\nMevcut Bakiyeniz: {balances[target_id]} TL", parse_mode='Markdown')
-        except Exception:
-            pass
-    except Exception:
-        bot.send_message(message.chat.id, "❌ Kullanım: `/bakiyeekle <kullanici_id> <miktar>`", parse_mode='Markdown')
-
-# Bakiye Silme Komutu
-@bot.message_handler(commands=['bakiyesil'])
-def remove_balance(message):
-    if message.from_user.id not in ADMINS:
-        return
-    try:
-        args = message.text.split()
-        target_id = int(args[1])
-        amount = int(args[2])
-        
-        balances[target_id] = max(0, balances.get(target_id, 0) - amount)
-        bot.send_message(message.chat.id, f"✅ `{target_id}` ID'li kullanıcının bakiyesinden **-{amount} TL** düşüldü!", parse_mode='Markdown')
-    except Exception:
-        bot.send_message(message.chat.id, "❌ Kullanım: `/bakiyesil <kullanici_id> <miktar>`", parse_mode='Markdown')
-
-# Duyuru Komutu
-@bot.message_handler(commands=['duyuru'])
-def send_broadcast(message):
-    if message.from_user.id not in ADMINS:
-        return
-    
-    text = message.text.replace('/duyuru', '').strip()
-    if not text:
-        bot.send_message(message.chat.id, "❌ Lütfen gönderilecek duyuru mesajını yazın!\nÖrnek: `/duyuru İndirim Başladı!`", parse_mode='Markdown')
-        return
-
-    success_count = 0
-    for uid in list(all_users):
-        try:
-            bot.send_message(uid, f"📢 **GÖKØ VIP MARKET DUYURUSU**\n\n{text}", parse_mode='Markdown')
-            success_count += 1
-        except Exception:
-            pass
-
-    bot.send_message(message.chat.id, f"✅ Duyuru **{success_count}** kullanıcıya başarıyla ulaştırıldı!", parse_mode='Markdown')
-
 # Botu Çalıştır
 bot.infinity_polling()
+    
