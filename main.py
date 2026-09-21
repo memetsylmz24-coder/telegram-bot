@@ -111,14 +111,21 @@ def start(message):
                         parse_mode='Markdown'
                     )
                 except Exception:
-                    pass
+                    pass   
 
+            markup = InlineKeyboardMarkup()
+    markup.add(InlineKeyboardButton("Kanalımıza Katılın", url="https://t.me/yago_frewl"))
+    markup.add(
+        InlineKeyboardButton("🛒 Market", callback_data="market"),
+        InlineKeyboardButton("👤 Profilim", callback_data="profile")
+    )
+    
     text = (
         "🔥 **GÖKØ VIP MARKET'E HOŞ GELDİNİZ** 🔥\n\n"
         "Aşağıdaki butonları kullanarak ürünlerimizi inceleyebilir, günlük bonus ve davet linkinizle bakiye kazanabilirsiniz."
     )
-    bot.send_message(message.chat.id, text, reply_markup=main_keyboard(user_id), parse_mode='Markdown')
-
+    bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode='Markdown')
+    
 # Buton Tıklamaları
 @bot.callback_query_handler(func=lambda call: True)
 def callback_listener(call):
