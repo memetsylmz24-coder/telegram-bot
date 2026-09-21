@@ -405,4 +405,3 @@ def send_broadcast(message):
 
 # Botu Çalıştır
 bot.infinity_polling()
-    i
