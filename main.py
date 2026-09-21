@@ -1,7 +1,6 @@
-import osimport telebot
+import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 import time
-
 # Bot Token ve Ana Kurucu Bilgisi
 API_TOKEN = '8531178024:AAGTlfjZL6yzWJQqNGC2_Jy9J4g7yopT_nA'
 bot = telebot.TeleBot(API_TOKEN)
