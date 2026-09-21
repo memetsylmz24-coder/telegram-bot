@@ -99,12 +99,41 @@ def start(message):
         args = message.text.split()
         if len(args) > 1 and args[1].isdigit():
             inviter_id = int(args[1])
-            if inviter_id != user_id and inviter_id in balances:
+            if inviter_id != user_id and inviter_id in all_users:
                 invited_by[user_id] = inviter_id
-                referral_counts[inviter_id] = referral_counts.get(inviter_id, 0) + 1
+                referral_counts[inviter_id] += 1
                 balances[inviter_id] += REF_BONUS
-                
                 try:
+                    bot.send_message(
+                        inviter_id,
+                        f"🎉 **Yeni Referans!** Davetinizle biri katıldı ve hesabınıza **+{REF_BONUS} TL** eklendi!",
+                        parse_mode='Markdown'
+                    )
+                except Exception:
+                    pass
+
+    markup = InlineKeyboardMarkup()
+    markup.add(InlineKeyboardButton("Kanalımıza Katılın", url="https://t.me/yago_frewl"))
+    markup.add(
+        InlineKeyboardButton("🛒 Market", callback_data="market"),
+        InlineKeyboardButton("👤 Profilim", callback_data="profile")
+    )
+    markup.add(
+        InlineKeyboardButton("🎁 Günlük Bonus", callback_data="daily_bonus"),
+        InlineKeyboardButton("👥 Referans Sistemi", callback_data="referral")
+    )
+    markup.add(
+        InlineKeyboardButton("💳 Bakiye Yükle", callback_data="deposit"),
+        InlineKeyboardButton("✉️ İletişim / Destek", callback_data="support")
+    )
+    markup.add(InlineKeyboardButton("👑 Admin Paneli", callback_data="admin_panel"))
+
+    text = (
+        "🔥 **GÖKØ VIP MARKET'E HOŞ GELDİNİZ** 🔥\n\n"
+        "Aşağıdaki butonları kullanarak ürünlerimizi inceleyebilir, günlük bonus ve davet linkinizle bakiye kazanabilirsiniz."
+    )
+    bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode='Markdown')
+    
                     bot.send_message(
                         inviter_id,
                         f"🎉 **Yeni Referans!**\nBir kullanıcı davet linkinizle katıldı!\n💰 **+{REF_BONUS} TL** bakiye hesabınıza eklendi.",
